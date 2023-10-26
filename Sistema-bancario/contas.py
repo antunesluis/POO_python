@@ -2,50 +2,51 @@ import abc
 
 
 class Conta(abc.ABC):
-    def __init__(self, agencia, num_conta, saldo=0):
+    def __init__(self, agencia: int, num_conta: int, saldo: float = 0):
         self._agencia = agencia
         self._conta = num_conta
         self._saldo = saldo
 
     # deve ser implementada na conta corrente ou poupança.
     @abc.abstractmethod
-    def sacar(self, valor):
+    def sacar(self, val: float) -> float:
         ...
 
     @property
-    def agencia(self):
+    def agencia(self) -> int:
         return self._agencia
 
     @agencia.setter
-    def agencia(self, val):
+    def agencia(self, val: int):
         self._agencia = val
 
     @property
-    def conta(self):
+    def conta(self) -> int:
         return self._conta
 
-    @agencia.setter
-    def conta(self, val):
+    @conta.setter
+    def conta(self, val: int):
         self._conta = val
 
     @property
-    def saldo(self):
+    def saldo(self) -> float:
         return self._saldo
 
-    @agencia.setter
-    def saldo(self, val):
+    @saldo.setter
+    def saldo(self, val: float):
         self._saldo = val
 
-    def depositar(self, val):
+    def depositar(self, val: float) -> float:
         self.saldo += val
         self.mostra_saldo(f'(DEPOSITO {val})')
+        return self.saldo
 
-    def mostra_saldo(self, msg=""):
+    def mostra_saldo(self, msg: str = "") -> None:
         print(f'Saldo atual: {self.saldo:.2f} {msg}')
 
 
 class ContaPoupanca(Conta):
-    def sacar(self, val):
+    def sacar(self, val: float) -> float:
         saldo_pos_saque = self.saldo - val
 
         if saldo_pos_saque >= 0:
@@ -55,35 +56,24 @@ class ContaPoupanca(Conta):
 
         print('Saldo insuficiente para saque')
         self.mostra_saldo(f'(SAQUE NEGADO {val})')
+        return self.saldo
 
 
-class ContaPoupanca(Conta):
-    def sacar(self, val):
-        saldo_pos_saque = self.saldo - val
-
-        if saldo_pos_saque >= 0:
-            self.saldo = saldo_pos_saque
-            self.mostra_saldo(f'(SAQUE {val})')
-            return self.saldo
-
-        print('Saldo insuficiente para saque')
-        self.mostra_saldo(f'(SAQUE NEGADO {val})')
-
-
-class ContaOrrente(Conta):
-    def __init__(self, agencia, num_conta, saldo=0, limite=0):
+class ContaCorrente(Conta):
+    def __init__(self, agencia: int, num_conta: int, saldo: float = 0,
+                 limite: int = 0):
         super().__init__(agencia, num_conta, saldo)
         self._limite = limite
 
     @property
-    def limite(self):
+    def limite(self) -> int:
         return self._limite
 
     @limite.setter
-    def limite(self, val):
+    def limite(self, val: int):
         self._limite = val
 
-    def sacar(self, val):
+    def sacar(self, val: float) -> float:
         saldo_pos_saque = self.saldo - val
 
         if saldo_pos_saque + self.limite >= 0:
@@ -92,12 +82,14 @@ class ContaOrrente(Conta):
             return self.saldo
 
         print('Saldo insuficiente para saque')
+        print(f'Seu limite é {-self.limite:.2f}')
         self.mostra_saldo(f'(SAQUE NEGADO {val})')
+        return self.saldo
 
 
 if __name__ == '__main__':
-    cp1 = ContaPoupanca(111, 222, 0)
-    cp1.sacar(1)
-    cp1.depositar(1)
-    cp1.sacar(1)
-    cp1.sacar(1)
+    cc1 = ContaPoupanca(111, 222, 0)
+    cc1.sacar(1)
+    cc1.depositar(1)
+    cc1.sacar(1)
+    cc1.sacar(1)
