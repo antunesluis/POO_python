@@ -44,6 +44,11 @@ class Conta(abc.ABC):
     def mostra_saldo(self, msg: str = "") -> None:
         print(f'Saldo atual: {self.saldo:.2f} {msg}')
 
+    def __repr__(self):
+        nome_conta = type(self).__name__
+        dados_conta = f'({self.agencia!r}, {self.conta!r}, {self.saldo!r})'
+        return f'{nome_conta}{dados_conta}'
+
 
 class ContaPoupanca(Conta):
     def sacar(self, val: float) -> float:
