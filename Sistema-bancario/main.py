@@ -7,7 +7,7 @@ possa sacar/depositar nessa conta. Contas corrente tem um limite extra.
 Conta (ABC)
     ContaCorrente
     ContaPoupanca
-Pessoa (ABC)
+Pessoa ()
     Cliente
         Clente -> Conta
 Banco
@@ -33,3 +33,22 @@ Banco será responsável autenticar o cliente e as contas da seguinte maneira:
 Só será possível sacar se passar na autenticação do banco (descrita acima)
 Banco autentica por um método.
 """
+import contas
+import pessoas
+import banco
+
+c1 = pessoas.Cliente('Luiz', 30)
+cc1 = contas.ContaCorrente(111, 222, 0, 0)
+c1.conta = cc1
+c2 = pessoas.Cliente('Maria', 18)
+cp1 = contas.ContaPoupanca(112, 223, 100)
+c2.conta = cp1
+banco = banco.Banco()
+banco.clientes.extend([c1, c2])
+banco.contas.extend([cc1, cp1])
+banco.agencias.extend([111, 222])
+
+if banco.autenticar(c1, cc1):
+    cc1.depositar(10)
+    c1.conta.depositar(100)
+    print(c1.conta)
